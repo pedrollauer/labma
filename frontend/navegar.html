@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LabMA</title>
+    <link rel="stylesheet" href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+    <style>
+        /* Container for the two side-by-side divs */
+        .container {
+            display: flex;
+            justify-content: space-between; /* Space between the divs */
+            padding: 20px; /* Optional: Add some padding around the container */
+        }
+
+        /* Style for the root-links div */
+        #root-links {
+            margin-left: 50px; /* Margin to the left */
+        }
+
+        /* Style the links */
+        #root-links a {
+            display: flex;
+            align-items: center;
+            text-decoration: none; /* Remove underline */
+            color: black; /* Link text color */
+            margin-bottom: 10px; /* Space between links */
+        }
+
+        /* Style the icons */
+        #root-links i {
+            margin-right: 5px; /* Space between icon and text */
+            font-size: 18px; /* Adjust icon size as needed */
+        }
+
+        /* Style for the side div */
+        #side-div {
+            width: 200px; /* Adjust width as needed */
+            padding: 20px; /* Padding inside the div */
+        }
+        .menu{
+            margin-top: 50px;
+            text-align: center;
+        }
+        a {
+            text-decoration: none; /* Remove underline */
+            color: black; /* Change color from default blue */
+            font-size: 16px;
+            display: inline-flex; /* Align icons and text */
+            align-items: center; /* Vertically center icon and text */
+            margin-right: 20px; /* Space between links */
+        }
+        h1{
+            text-align: center;
+            margin-top: 180px; 
+        }
+
+        img{
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            margin-top: 20px;
+            top: 100px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .hidden {
+            display: none;
+        }
+        i {
+            margin-right: 5px; /* Space between icon and text */
+        }
+
+                .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #3498db;
+            padding: 10px 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            z-index: 1000; /* Ensure the header stays on top */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: add a shadow */
+        }
+
+        /* Style the return button */
+        .return-button {
+            display: inline-flex;
+            align-items: center;
+            background-color: transparent;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            padding: 0; /* Remove padding to make the button fit neatly */
+        }
+
+        .return-button i {
+            margin-right: 8px; /* Space between icon and text */
+        }
+
+        .return-button:hover {
+            color: #bdc3c7; /* Lighter color on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="./main.html" class="return-button">
+            <i class="fas fa-arrow-left"></i>Voltar
+        </a>
+    </div>
+    <img src="../assets/labma_logo.png">
+    <h1>LabMA</h1>
+    <div class="menu">
+    </div>
+    <div class="container">
+    <div id="root-links"></div>
+    <div id="side-div">
+    <p id="side-div-content"></p> 
+</div>
+    </div>
+    <script src="navegar.js"></script>
+</body>
+</html>
+

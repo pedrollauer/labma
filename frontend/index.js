@@ -3,6 +3,7 @@ const { ipcRenderer } = require('electron');
 const spinnerElement = document.getElementById('spinner');
 
 
+    console.log(document.getElementById('spinner'))
 // Update the status message when the main process sends a message
 ipcRenderer.on('update-status', (event, message) => {
     document.getElementById('status').innerText = message;
