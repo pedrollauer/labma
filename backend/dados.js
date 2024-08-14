@@ -6,11 +6,12 @@ const path = require('path');
 const dbPath = path.join(__dirname, '..', 'db', 'labma.db');
 
 // Função para obter os nomes da tabela root
-function getRootNames() {
+function getRootNames(command) {
     return new Promise((resolve, reject) => {
         const db = new sqlite3.Database(dbPath);
 
-        db.all('SELECT nome, descricao FROM root', [], (err, rows) => {
+        const query = command.query
+        db.all(query, [], (err, rows) => {
             if (err) {
                 reject(err);
             } else {

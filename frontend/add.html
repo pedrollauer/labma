@@ -6,6 +6,14 @@
     <title>LabMA</title>
     <link rel="stylesheet" href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
     <style>
+        .formulario{
+            margin-top: 20px;
+        }
+
+        label{
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
         .menu{
             margin-top: 50px;
             text-align: center;
@@ -74,6 +82,42 @@
         .return-button:hover {
             color: #bdc3c7; /* Lighter color on hover */
         }
+                /* Styles for the drop-down area */
+        #file-drop-area {
+            display: none; /* Hidden by default */
+            width: 50%;
+            height: 150px;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            text-align: center;
+            line-height: 150px;
+            margin: 20px auto 0 auto; /* Center horizontally */
+            color: #888;
+        }
+
+        .file-line {
+            margin-top: 10px;
+    }
+
+    .file-icon {
+        font-size: 18px;
+        margin-right: 10px;
+    }
+
+    .file-input {
+        flex: 1;
+        padding: 5px;
+        margin-right: 10px;
+    }
+
+    .remove-button {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+        color: red;
+    }
+
     </style>
 </head>
 <body>
@@ -85,9 +129,46 @@
     <img src="../assets/labma_logo.png">
     <h1>LabMA</h1>
     <div class="menu">
-        ADD
+ <div>   </div>
+<div class = "content">
+    <!-- Dropdown Menu -->
+     <p>Selecione o tipo de arquivo que deja adicionar</p>
+    <select id="category-select">
+        <option value="" disabled selected>Selecione a categoria</option>
+        <option value="1">Nova Amostra</option>
+        <option value="2">Adicionar ensaio realizado</option>
+        <option value="3">Documentos</option>
+        <option value="4">Desenhos | Ilustrações | Vídeos</option>
+        <option value="5">Apresentações</option>
+        <option value="6">Simulações</option>
+        
+    </select>
+
+    <!-- Drop Area -->
+    <div id="file-drop-area">Jogue os seus arquivos aqui</div>
+    <!-- Container to hold the file list -->
+    <div id="file-list"></div>
+
+    <div class = "formulario" id="form-amostra">FORMULÁRIO NOVA AMOSTRA <br>
+        <label>Selecione o Projeto à qual a amostra pertence:</label><br>
+        <select>
+            <option>Proj 1</option>
+            <option>Proj 2</option>
+            <option>Proj 3</option>
+        </select><br>
+
+        <label>Qual é o material da amostra:</label> <br>
+        <select>
+            <option>Stain steel 316-L</option>
+            <option>HEA - Cantor</option>
+            <option>Hastelloy</option>
+        </select>
     </div>
-    <script src="main.js"></script>
+    <div class="formulario" id="form-atua-amostra">FORMULÁRIO ATUALIZAR AMOSTRA</div>
+    <div class = "formulario"id="form-documento">FORMULÁRIO ADICIONAR DOCUMENTO</div>
+
+</div>
+    <script src="./js/add.js"></script>
 </body>
 </html>
 
