@@ -1,14 +1,19 @@
+const { ipcRenderer } = require('electron');
 // Array to store file paths
 let filePaths = [];
 
 // Get references to the select element and the drop area
 const categorySelect = document.getElementById('category-select');
 const fileDropArea = document.getElementById('file-drop-area');
+const newCodeArea = document.getElementById('new-code-area');
 const fileListContainer = document.getElementById('file-list');
 // Get references to the form divs
 const formAmostra = document.getElementById('form-amostra');
 const formAtuaAmostra = document.getElementById('form-atua-amostra');
 const formDocumento = document.getElementById('form-documento');
+const formAmostraGerar = document.getElementById('form-amostra-gerar');
+const formAmostraProjeto = document.getElementById('form-amostra-projeto');
+const formAmostraMaterial = document.getElementById('form-amostra-material');
 
 // Function to hide all forms
 function hideAllForms() {
@@ -17,12 +22,46 @@ function hideAllForms() {
     formDocumento.style.display = 'none';
 }
 
-hideAllForms()
 // Show the drop area when an option is selected
 categorySelect.addEventListener('change', () => {
-    fileDropArea.style.display = 'block';
 
     const selectedValue = parseInt(categorySelect.value, 10);
+    if(selectedValue > 1){
+        fileDropArea.style.display = 'block';
+    }
+
+    if(selectedValue == 1){
+        fileDropArea.style.display = 'none';
+        command = {
+            query: "Select * from projetos"
+        }
+
+        fetchData(command).then((data)=>{
+            const selectElement = document.getElementById('form-amostra-projeto');
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.textContent = item.nome;
+                selectElement.appendChild(option);
+            });
+        })
+
+        fetchData({query:"Select * from materiais"}).then((data)=>{
+            console.log(data)
+            const selectElement = document.getElementById('form-amostra-material');
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.textContent = item.nome;
+                selectElement.appendChild(option);
+            });
+        }).catch((e)=>{
+            console.log(e)
+        })
+
+
+
+    }
 
     hideAllForms()
     // Show the corresponding form based on the selected option
@@ -90,3 +129,36 @@ fileDropArea.addEventListener('drop', (event) => {
 
     console.log('Files:', filePaths);
 });
+
+formAmostraGerar.addEventListener('click', ()=>{
+        event.preventDefault(); // Prevent the form from reloading the page
+    
+        // Get the selected values from the dropdowns
+        const projetoId = formAmostraProjeto.value;
+        const materialId = formAmostraMaterial.value;
+    
+        // You can now send these values to the main process or perform further actions
+        console.log('Projeto ID:', projetoId);
+        console.log('Material ID:', materialId);
+        ipcRenderer.invoke('gerar-nova-amostra', { projetoId, materialId }).then(response => {
+            console.log("Codigo: "+response)
+            newCodeArea.innerHTML = `<h2>AAA-AA-AAA-${response}</h2>`
+        });
+            formAmostraProjeto.innerHTML =''
+            formAmostraMaterial.innerHTML =''
+       hideAllForms() 
+       newCodeArea.style.display = 'block'
+});
+
+function fetchData(command){ 
+    return new Promise((resolve, reject) => {
+        try{
+            const data = ipcRenderer.invoke('get-root-names', command); 
+            resolve(data)
+        }catch(e){
+            reject(e)
+        }
+    });
+}
+
+hideAllForms()

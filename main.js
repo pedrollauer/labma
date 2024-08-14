@@ -12,6 +12,20 @@ ipcMain.handle('get-root-names', async (event, command) => {
     return names;
 });
 
+
+ipcMain.handle('gerar-nova-amostra', async (event, data) => {
+  const { projetoId, materialId } = data;
+  
+  // Process the data (e.g., save it to a database)
+  console.log('Received data:', projetoId, materialId);
+
+  // Assume you perform some operations and get a result
+  const result = { message: 'Form submitted successfully' };
+
+  // Return the result as the response
+  return 120;
+});
+
 app.whenReady().then(() => {
 
   win = new BrowserWindow({
