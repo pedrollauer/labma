@@ -14,12 +14,14 @@ const formDocumento = document.getElementById('form-documento');
 const formAmostraGerar = document.getElementById('form-amostra-gerar');
 const formAmostraProjeto = document.getElementById('form-amostra-projeto');
 const formAmostraMaterial = document.getElementById('form-amostra-material');
+const formAmostraNumero = document.getElementById('form-amostra-numero');
 
 // Function to hide all forms
 function hideAllForms() {
     formAmostra.style.display = 'none';
     formAtuaAmostra.style.display = 'none';
     formDocumento.style.display = 'none';
+    newCodeArea.style.display = 'none'
 }
 
 // Show the drop area when an option is selected
@@ -136,20 +138,37 @@ formAmostraGerar.addEventListener('click', ()=>{
         // Get the selected values from the dropdowns
         const projetoId = formAmostraProjeto.value;
         const materialId = formAmostraMaterial.value;
+        const numeroId = formAmostraNumero.value;
     
         // You can now send these values to the main process or perform further actions
         console.log('Projeto ID:', projetoId);
         console.log('Material ID:', materialId);
-        ipcRenderer.invoke('gerar-nova-amostra', { projetoId, materialId }).then(response => {
-            console.log("Codigo: "+response)
-            newCodeArea.innerHTML = `<h2>AAA-AA-AAA-${response}</h2>`
+        console.log('Number:', numeroId);
+        const new_sample = '<button id="btn-mais-um">Gerar Mais Uns</button><br>'
+        ipcRenderer.invoke('gerar-nova-amostra', { projetoId, materialId, numeroId}).then(response => {
+            console.log(numeroId)
+            if(numeroId == 1){
+                newCodeArea.innerHTML = new_sample + ` Código gerado com sucesso! <h2 id="new-code">${response.project}-${response.student}-${response.material}-${response.number}</h2>`
+            }else if(numeroId > 1){
+                console.log("ENTREI")
+                newCodeArea.innerHTML = new_sample + ` Código gerado com sucesso! <h2 id="new-code">${response.project}-${response.student}-${response.material}-${response.number}</h2><br>ATÉ<br><h2 id="new-code">${response.project}-${response.student}-${response.material}-${response.number}</h2>`
+            }
+
         });
             formAmostraProjeto.innerHTML =''
             formAmostraMaterial.innerHTML =''
+            formAmostraNumero.value = 0
        hideAllForms() 
        newCodeArea.style.display = 'block'
+       const btn = document.getElementById('btn-mais-um')
+       btn.addEventListener('click', () => {gerarMaisUma})
+
 });
 
+function gerarMaisUma(){
+    console.log(2)
+    categorySelect.value = 2
+}
 function fetchData(command){ 
     return new Promise((resolve, reject) => {
         try{

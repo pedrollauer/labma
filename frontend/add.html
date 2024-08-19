@@ -13,6 +13,10 @@
             margin-top: 20px;
         }
 
+        input{
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
         select{
             margin-top: 20px;
             margin-bottom: 20px;
@@ -99,16 +103,22 @@
             color: #888;
         }
 
-        #new-code-area {
-            display: none; /* Hidden by default */
+        
+        #new-code {
             width: 50%;
             height: 150px;
-            color: red;
             border: 2px dashed #ccc;
             border-radius: 5px;
+            font-weight: bold;
             text-align: center;
             line-height: 150px;
             margin: 20px auto 0 auto; /* Center horizontally */
+            color: green;
+        }
+
+        #new-code-area {
+            display: none; /* Hidden by default */
+            color: lightblue;
         }
 
         .file-line {
@@ -178,6 +188,9 @@
             <option value="" disabled selected>Selecione o material</option>
             </select>
             <br>
+
+            <label>Quantos códigos você precisa gerar?</label><br>
+            <input id="form-amostra-numero" type="number"></input><br>
             <button id="form-amostra-gerar">Gerar Código</button>
         </form>
     </div>
