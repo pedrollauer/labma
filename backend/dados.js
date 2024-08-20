@@ -87,7 +87,7 @@ function gerarCodAmostra(data){
         codProj = finalRows[0].id_cod
         codFormatado = ('000' + codigo).substr(-3)
         console.log(codProj+"-"+"PL"+"-"+codMaterial+"-"+codFormatado)
-        resolve({project: codProj,student: "PL",number: codFormatado, material: codMaterial})
+        resolve({erro: 0, project: codProj,student: "PL",number: codFormatado, material: codMaterial})
         // Final processing
     })
     .catch(err => {

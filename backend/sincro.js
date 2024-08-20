@@ -55,7 +55,39 @@ function baixarArquivo(auth, fileId,FILE_NAME) {
     })
 }
 
+async function uploadDB(auth) {
+    return new Promise(async(resolve, reject) => {
+
+        const drive = google.drive({ version: 'v3', auth });
+        const filePath = path.join(__dirname, '../db/labma.db'); // Adjust the path if needed
+        const fileId = '1Len4G81GeHBl72uOB5G5FFU68suKhTO2'; // The ID of the file to update
+
+        console.log(filePath)
+        const fileMetadata = {
+            name: 'labma.db',
+        };
+        const media = {
+            mimeType: 'application/x-sqlite3',
+            body: fs.createReadStream(filePath),
+        };
+
+        try {
+            const response = await drive.files.update({
+                fileId: fileId,
+                media: media,
+                resource: fileMetadata,
+            });
+            console.log('File uploaded successfully', response.data);
+            resolve()
+        } catch (error) {
+            console.error('Error uploading the file:', error);
+            reject()
+        }
+    })
+}
+
 module.exports = {
     pegarBanco,
-    baixarArquivo
+    baixarArquivo,
+    uploadDB
 }

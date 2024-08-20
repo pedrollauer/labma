@@ -16,6 +16,19 @@ const formAmostraProjeto = document.getElementById('form-amostra-projeto');
 const formAmostraMaterial = document.getElementById('form-amostra-material');
 const formAmostraNumero = document.getElementById('form-amostra-numero');
 
+// Buttons
+       const btnGerar = document.getElementById('btn-mais-um')
+       btnGerar.addEventListener('click', () => {
+       
+       categorySelect.value = 1
+       const event = new Event('change')
+       categorySelect.dispatchEvent(event)
+       formAmostraNumero.value = 0
+       formAmostraProjeto.value = 0
+       formAmostraMaterial.value = 0
+
+    })
+
 // Function to hide all forms
 function hideAllForms() {
     formAmostra.style.display = 'none';
@@ -33,6 +46,7 @@ categorySelect.addEventListener('change', () => {
     }
 
     if(selectedValue == 1){
+       resetarNovaAmostra()
         fileDropArea.style.display = 'none';
         command = {
             query: "Select * from projetos"
@@ -140,35 +154,44 @@ formAmostraGerar.addEventListener('click', ()=>{
         const materialId = formAmostraMaterial.value;
         const numeroId = formAmostraNumero.value;
     
+        if(projetoId == 0 | materialId == 0 | numeroId <= 0){
+            alert("Por favor preencha todos os campos apropriadamente.")
+            return
+        }
+
         // You can now send these values to the main process or perform further actions
-        console.log('Projeto ID:', projetoId);
-        console.log('Material ID:', materialId);
-        console.log('Number:', numeroId);
-        const new_sample = '<button id="btn-mais-um">Gerar Mais Uns</button><br>'
         ipcRenderer.invoke('gerar-nova-amostra', { projetoId, materialId, numeroId}).then(response => {
-            console.log(numeroId)
+
+            if(response.erro == 1){
+                alert("Erro de conexão")
+                return
+            }
+
             if(numeroId == 1){
-                newCodeArea.innerHTML = new_sample + ` Código gerado com sucesso! <h2 id="new-code">${response.project}-${response.student}-${response.material}-${response.number}</h2>`
+                newCodeArea.innerHTML = ` Código gerado com sucesso! <h2 id="new-code">${response.project}-${response.student}-${response.material}-${response.number}</h2>`
             }else if(numeroId > 1){
                 console.log("ENTREI")
-                newCodeArea.innerHTML = new_sample + ` Código gerado com sucesso! <h2 id="new-code">${response.project}-${response.student}-${response.material}-${response.number}</h2><br>ATÉ<br><h2 id="new-code">${response.project}-${response.student}-${response.material}-${response.number}</h2>`
+                newCodeArea.innerHTML = ` Código gerado com sucesso! <h2 id="new-code">${response.project}-${response.student}-${response.material}-${response.number}</h2><br>ATÉ<br><h2 id="new-code">${response.project}-${response.student}-${response.material}-${response.number}</h2>`
             }
 
         });
-            formAmostraProjeto.innerHTML =''
-            formAmostraMaterial.innerHTML =''
-            formAmostraNumero.value = 0
-       hideAllForms() 
+
+        resetarNovaAmostra()
+       btnGerar.style.display = 'block'
        newCodeArea.style.display = 'block'
-       const btn = document.getElementById('btn-mais-um')
-       btn.addEventListener('click', () => {gerarMaisUma})
 
 });
 
-function gerarMaisUma(){
-    console.log(2)
-    categorySelect.value = 2
+function resetarNovaAmostra(){
+            formAmostraProjeto.innerHTML ='<option value="0" disabled selected>Selecione o projeto</option>'
+            formAmostraMaterial.innerHTML = '<option value="0" disabled selected>Selecione o material</option>'
+
+            formAmostraNumero.value = 0
+            formAmostraProjeto.value = 0
+            formAmostraMaterial.value = 0
+            hideAllForms() 
 }
+
 function fetchData(command){ 
     return new Promise((resolve, reject) => {
         try{

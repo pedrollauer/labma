@@ -22,6 +22,12 @@ ipcMain.handle('gerar-nova-amostra', async (event, data) => {
   // Assume you perform some operations and get a result
   const result = { message: 'Form submitted successfully' };
   const nova_amostra = await dados.gerarCodAmostra(data)
+
+  await auth().then(sincro.uploadDB).then(()=>{console.log('Upload feito!')}).catch((err)=>{
+    console.log(err)
+    nova_amostra = {erro: 1}
+  })
+
   //const nova_amostra = {project: "A1",student: "PL", material:"SS1", number:"001"}
   // Return the result as the response
   return nova_amostra;
