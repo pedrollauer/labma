@@ -13,7 +13,7 @@ function pegarBanco(auth) {
         fields: 'files(id, name)',
     }, (err, res) => {
         if (err){
-            return console.error('Error searching for file:', err);
+            reject(err.response.data.error)
         }
         
         const files = res.data.files;
@@ -55,6 +55,44 @@ function baixarArquivo(auth, fileId,FILE_NAME) {
     })
 }
 
+async function uploadArquivo(auth,nome) {
+    console.log("Entrei")
+    console.log(nome)
+    return new Promise(async(resolve, reject) => {
+
+        const drive = google.drive({ version: 'v3', auth });
+        const filePath = nome
+
+        console.log(filePath)
+        const fileMetadata = {
+            name: 'newfile.py',
+            parents: '1GWPsJCbrITD9dRH_gp-9p8q7I3EdEAjP'
+        };
+        const media = {
+            mimeType: 'application/x-py',
+            body: fs.createReadStream(filePath),
+        };
+
+            drive.files.create({
+                resource: fileMetadata,
+                media: media,
+                fields: 'id,', // Request only the file ID in the response
+            }, (err, file) => {
+                if (err) {
+                    // Handle error
+                    console.error('Error during file upload:', err);
+                    reject()
+                } else {
+                    // File uploaded successfully, and now you can access the file ID
+                    console.log('File uploaded successfully, File ID:', file.data.id);
+                    resolve()
+                    // You can now use file.data.id to reference the uploaded file in future operations
+                }
+            });
+        
+    })
+}
+
 async function uploadDB(auth) {
     return new Promise(async(resolve, reject) => {
 
@@ -77,7 +115,6 @@ async function uploadDB(auth) {
                 media: media,
                 resource: fileMetadata,
             });
-            console.log('File uploaded successfully', response.data);
             resolve()
         } catch (error) {
             console.error('Error uploading the file:', error);
@@ -89,5 +126,6 @@ async function uploadDB(auth) {
 module.exports = {
     pegarBanco,
     baixarArquivo,
-    uploadDB
+    uploadDB,
+    uploadArquivo
 }

@@ -37,9 +37,6 @@ function executeQuery(query, params = []) {
             });
         } else {
             // Use `db.run` for UPDATE/INSERT/DELETE queries
-            console.log('Aloha')
-            console.log(query)
-            console.log(params)
             db.run(query, params, function(err) {
                 if (err) {
                     return reject(err);
@@ -59,7 +56,8 @@ function gerarCodAmostra(data){
         let codMaterial;
         let codProj;
         console.log(data)
-        executeQuery('Update codigos set codigo = codigo + ? WHERE id = 0', [data.numeroId])
+        novo_codigo = parseInt(data.numeroId)
+        executeQuery('Update codigos set codigo = codigo + ? WHERE id = 0', [novo_codigo])
     .then(rows => {
         // Return a new query based on the analysis
         console.log("ALTEACAO")

@@ -15,11 +15,20 @@ const formAmostraGerar = document.getElementById('form-amostra-gerar');
 const formAmostraProjeto = document.getElementById('form-amostra-projeto');
 const formAmostraMaterial = document.getElementById('form-amostra-material');
 const formAmostraNumero = document.getElementById('form-amostra-numero');
+const spinner = document.getElementById('spinner')
+const enviarDocumento = document.getElementById('form-documento-enviar')
+enviarDocumento.addEventListener('click',()=>{
+    console.log("Adic")
+    ipcRenderer.invoke('novo-documento', {arquivos: filePaths}).then(response => {
+
+    }).catch((err)=>{console.log(err)})
+})
 
 // Buttons
        const btnGerar = document.getElementById('btn-mais-um')
        btnGerar.addEventListener('click', () => {
        
+       newCodeArea.style.display = 'hidden'
        categorySelect.value = 1
        const event = new Event('change')
        categorySelect.dispatchEvent(event)
@@ -152,7 +161,7 @@ formAmostraGerar.addEventListener('click', ()=>{
         // Get the selected values from the dropdowns
         const projetoId = formAmostraProjeto.value;
         const materialId = formAmostraMaterial.value;
-        const numeroId = formAmostraNumero.value;
+        const numeroId = parseInt(formAmostraNumero.value);
     
         if(projetoId == 0 | materialId == 0 | numeroId <= 0){
             alert("Por favor preencha todos os campos apropriadamente.")
@@ -167,18 +176,20 @@ formAmostraGerar.addEventListener('click', ()=>{
                 return
             }
 
+             newCodeArea.style.display = 'block'
+             spinner.style.display = 'none'
             if(numeroId == 1){
                 newCodeArea.innerHTML = ` Código gerado com sucesso! <h2 id="new-code">${response.project}-${response.student}-${response.material}-${response.number}</h2>`
             }else if(numeroId > 1){
                 console.log("ENTREI")
-                newCodeArea.innerHTML = ` Código gerado com sucesso! <h2 id="new-code">${response.project}-${response.student}-${response.material}-${response.number}</h2><br>ATÉ<br><h2 id="new-code">${response.project}-${response.student}-${response.material}-${response.number}</h2>`
+                newCodeArea.innerHTML = ` Código gerado com sucesso! <h2 id="new-code">${response.project}-${response.student}-${response.material}-${response.number}</h2><br>ATÉ<br><h2 id="new-code">${response.project}-${response.student}-${response.material}-${parseInt(parseInt(response.number)+parseInt(numeroId))}</h2>`
             }
 
         });
 
         resetarNovaAmostra()
        btnGerar.style.display = 'block'
-       newCodeArea.style.display = 'block'
+       spinner.style.display = 'block'
 
 });
 

@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LabMA</title>
     <style>
+        #btnRetry{
+            display: none;
+        }
         .spinner {
             border: 16px solid #f3f3f3; /* Light grey */
             border-top: 16px solid #3498db; /* Blue */
@@ -27,7 +30,7 @@
             text-align: center;
             margin-top: 250px; 
         }
-        #status{
+        #status, #options{
             text-align: center;
             font-size: 20px;
             margin-top: 10px;
@@ -52,8 +55,9 @@
     <img src="../assets/labma_logo.png">
     <h1>LabMA</h1>
     <div id="spinner" class="spinner"></div>
-    <div id="status">Carregando Arquivos...</div>
-
+    <div id="status">Carregando Arquivos...<br>
+    </div>
+    <div id = "options"><a id="btnRetry" href="#">Tentar Novamente</a></div>
     <script src="index.js"></script>
 </body>
 </html>
