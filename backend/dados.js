@@ -1,7 +1,11 @@
 // Importar o módulo sqlite3
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
-
+const Projects = require("../classes/projects");
+const Materias = require("../classes/materiais");
+const Codigos = require("../classes/codigos");
+const Amostras = require("../classes/amostras");
+const { Timestamp } = require("firebase/firestore");
 // Caminho para o banco de dados
 const dbPath = path.join(__dirname, '..', 'db', 'labma.db');
 
@@ -49,9 +53,7 @@ function executeQuery(query, params = []) {
     });
 }
 
-
-function gerarCodAmostra(data){
-    return new Promise((resolve, reject) => {
+async function fgerarCodAmostra(data){
         let codigo;
         let codMaterial;
         let codProj;
@@ -92,8 +94,59 @@ function gerarCodAmostra(data){
         console.error('Error occurred during the query chain:', err);
         // Handle errors here
     });
-    });
+
 }
+
+async function gerarCodAmostra(data, user){
+    console.log('All set')
+    const projetos = new Projects()
+    const materiais = new Materias()
+  
+    console.log(data)
+    const projeto = await projetos.getProjectById(data.projetoId)
+    const material = await materiais.getMaterialById(data.materialId)
+  
+    const initials = getInitials(user.nome)
+    const codigoBase = projeto.id_cod + '-' + initials + '-' + material.id_cod
+  
+    //Vemos se já tem algum registro
+    const codigos = new Codigos()
+    let registros = await codigos.getCodigosByTabela(codigoBase)
+  
+    if(registros.length==0){
+      codigos.createCodigo({codigo:0, tabela: codigoBase})
+      registros = await codigos.getCodigosByTabela(codigoBase)
+    }
+  
+    registros[0].codigo += 1
+    console.log(registros[0])
+    codigos.updateCodigo(registros[0])
+  
+    const codigoNovo = codigoBase + '-' + formatToThreeDigits(registros[0].codigo)
+    console.log(codigoNovo)
+  
+    const sample = {nome: codigoNovo, usuario: user.id, data: Timestamp.now(), material: material.id, projeto: projeto.id}
+    const samples = new Amostras()
+    samples.createSample(sample)
+  
+    return codigoNovo
+  }
+
+function formatToThreeDigits(number) {
+  return number.toString().padStart(3, '0');
+}
+
+function getInitials(fullName) {
+  // Split the full name into an array of words
+  const nameParts = fullName.trim().split(' ');
+
+  // Get the first two initials (first letter of the first two words)
+  const initials = nameParts.slice(0, 2).map(name => name.charAt(0).toUpperCase()).join('');
+
+  return initials;
+}
+
+
 module.exports = {getRootNames, gerarCodAmostra}
 
 

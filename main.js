@@ -5,10 +5,15 @@ const auth = require('./backend/autenticacao')
 const { ipcMain } = require('electron');
 const path = require('path')
 const fs = require('fs')
-const getRootNames = dados.getRootNames
+const local = require('./backend/local.js')
+let userId
+
+//const getRootNames = dados.getRootNames
+const Database  = require('./classes/database')
 let win 
 
 const firebase = require('firebase/app');
+const Usuarios = require('./classes/usuarios.js');
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -22,7 +27,10 @@ const firebaseConfig = {
 
 // Quando o evento 'get-root-names' for solicitado, obtenha os nomes e os envie de volta
 ipcMain.handle('get-root-names', async (event, command) => {
-    const names = await getRootNames(command);
+    console.log(command)
+    const getRootNames = new Database(command.collection)
+    const names = await getRootNames.getDocuments()
+    //const names = await getRootNames(command);
     return names;
 });
 
@@ -41,24 +49,35 @@ ipcMain.handle('novo-documento', async (event, command) => {
     return command;
 });
 
+ipcMain.handle('upload-amostra', async(event, data)=>{
+  console.log(data)
+  auth().then(auth=>sincro.uploadArquivo(auth, data.arquivos[0]))
+})
+
 ipcMain.handle('gerar-nova-amostra', async (event, data) => {
-  const { projetoId, materialId, numero } = data;
+  const { projetoId, materialId, numeroId } = data;
   
   // Process the data (e.g., save it to a database)
-  console.log('Received data:', projetoId, materialId, numero);
+  console.log('Received data:', projetoId, materialId, numeroId);
 
+  console.log(data)
   // Assume you perform some operations and get a result
-  const result = { message: 'Form submitted successfully' };
-  let nova_amostra = await dados.gerarCodAmostra(data)
+  let codigoFinal, codigo
+  for(let i=0; i < numeroId;i++){
+    const temp = await dados.gerarCodAmostra(data, userId)
+    console.log(codigo)
 
-  await auth().then(sincro.uploadDB).then(()=>{console.log('Upload feito!')}).catch((err)=>{
-    console.log(err)
-    nova_amostra = {erro: 1}
-  })
-
-  //const nova_amostra = {project: "A1",student: "PL", material:"SS1", number:"001"}
+    if(i == 0){
+      codigo = temp
+      if(i == numeroId-1){break}
+    }
+    if(i == numeroId-1){codigoFinal = temp}
+  }
   // Return the result as the response
-  return nova_amostra;
+
+  const nova_amostra = {codigo: codigo, erro:0, codigoFinal: codigoFinal}
+  console.log(nova_amostra)
+  return nova_amostra
 });
 
 app.whenReady().then(() => {
@@ -85,10 +104,21 @@ app.whenReady().then(() => {
  
 })
 
+
 function authenticate(){
 
- auth().then(sincro.pegarBanco).then(()=>{
+ auth().then(sincro.pegarBanco).then(async(auth)=>{
+    mail= await sincro.getUserEmail(auth)
+    const usuarios = new Usuarios()
+    userId = await usuarios.getUserByEmail(mail)
+    console.log(userId)
+    console.log('Logado como: '+userId)
+    if(userId.id==null){
+      //Não existe usuario precisamos criar!
+      console.log('Erro! Usuário não cadastrado')
+    }
     win.loadFile("frontend/main.html")
+
  }).catch((err)=>{
   if(err == 'invalid_grant'){
     console.log('Deletando token invalido')

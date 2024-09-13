@@ -205,7 +205,7 @@
             <h3>FORMULÁRIO NOVA AMOSTRA</h3>
             <br>
             <label>Selecione o Projeto à qual a amostra pertence:</label><br>
-            <select required id = form-amostra-projeto>
+            <select required id = "form-amostra-projeto">
             <option value="0" disabled selected>Selecione o projeto</option>
             </select><br>
 
@@ -219,7 +219,33 @@
             <button id="form-amostra-gerar">Gerar Código</button>
         </form>
     </div>
-    <div class="formulario" id="form-atua-amostra">FORMULÁRIO ATUALIZAR AMOSTRA</div>
+    <div class="formulario" id="form-atua-amostra">
+            <!-- New Sample Form-->
+            <h3>FORMULÁRIO UPLOAD DE ARQUIVOS</h3>
+            <br>
+            <label>Selecione a amostra:</label><br>
+            <select required id = "form-atual-amostra">
+            <option value="0" disabled selected>Selecione a amostra</option>
+            </select><br>
+
+            <label>Selecione o tipo de arquivo:</label> <br>
+            <select id="form-atua-tipo">
+            <option required value="0" disabled selected>Selecione tipo de arquivo</option>
+            <option required value="1">Imagem</option>
+            <option required value="1">Planilha</option>
+            <option required value="1">Texto</option>
+            <option required value="1">PDF</option>
+            <option required value="1">Outro</option>
+
+            </select>
+            <br>
+            <label>Selecione o tipo de ensaio: </label><br>
+            <select required id = form-atua-ensaio>
+            <option value="0" disabled selected>Selecione o ensaio</option>
+            </select><br>
+            <button id="form-atua-gerar">Subir Arquivos</button>
+            <h6>Anexe os seus arquivos aqui: </h6>
+    </div>
     <div class = "formulario"id="form-documento">
         FORMULÁRIO ADICIONAR NOVO DOCUMENTO<br>
         <label>Selecione o tipo de documento</label><br>

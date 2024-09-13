@@ -8,7 +8,7 @@ const {google} = require('googleapis');
 const FILE_NAME = "labma.db"
 
 // If modifying these scopes, delete token.json.
-const SCOPES = ['https://www.googleapis.com/auth/drive'];
+const SCOPES = ['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email'];
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
@@ -53,6 +53,8 @@ async function saveCredentials(client) {
  * Load or request or authorization to call APIs.
  *
  */
+
+
 async function authorize() {
   let client = await loadSavedCredentialsIfExist();
   if (client) {
