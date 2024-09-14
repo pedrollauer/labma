@@ -226,7 +226,11 @@ formAtuaGerar.addEventListener('click', ()=>{
             return
         }
 
-        ipcRenderer.invoke('upload-amostra', {amostra: amostra, tipo: tipo, ensaio: ensaio, arquivos: filePaths})
+        ipcRenderer.invoke('upload-amostra', {amostra: amostra, tipo: tipo, ensaio: ensaio, arquivos: filePaths}).then(response=>{
+            spinner.style.display = 'none'
+            alert('Upload feito com sucesso')
+
+        })
 
     //     // You can now send these values to the main process or perform further actions
     //     ipcRenderer.invoke('gerar-nova-amostra', { projetoId, materialId, numeroId}).then(response => {

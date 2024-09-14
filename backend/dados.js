@@ -96,7 +96,25 @@ async function fgerarCodAmostra(data){
     });
 
 }
-
+async function gerarNomeArquivo(codigoBase){
+  
+    //Vemos se já tem algum registro
+    const codigos = new Codigos()
+    let registros = await codigos.getCodigosByTabela(codigoBase)
+  
+    if(registros.length==0){
+      codigos.createCodigo({codigo:0, tabela: codigoBase})
+      registros = await codigos.getCodigosByTabela(codigoBase)
+    }
+  
+    registros[0].codigo += 1
+    console.log(registros[0])
+    codigos.updateCodigo(registros[0])
+  
+    const codigoNovo = codigoBase + '-' + formatToThreeDigits(registros[0].codigo)
+  
+    return codigoNovo
+  }
 async function gerarCodAmostra(data, user){
     console.log('All set')
     const projetos = new Projects()
@@ -147,6 +165,6 @@ function getInitials(fullName) {
 }
 
 
-module.exports = {getRootNames, gerarCodAmostra}
+module.exports = {getRootNames, gerarCodAmostra, gerarNomeArquivo}
 
 

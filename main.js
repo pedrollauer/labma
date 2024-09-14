@@ -14,6 +14,9 @@ let win
 
 const firebase = require('firebase/app');
 const Usuarios = require('./classes/usuarios.js');
+const Arquivos = require('./classes/arquivos.js');
+const { Timestamp } = require('firebase/firestore');
+const Amostras = require('./classes/amostras.js');
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -51,7 +54,18 @@ ipcMain.handle('novo-documento', async (event, command) => {
 
 ipcMain.handle('upload-amostra', async(event, data)=>{
   console.log(data)
-  auth().then(auth=>sincro.uploadArquivo(auth, data.arquivos[0]))
+  auth().then(auth=>sincro.uploadArquivo(auth, data.arquivos[0])).then(async(id) => {
+    console.log(id)
+    const arquivos = new Arquivos()
+    const amostras = new Amostras()
+
+    const nomeBase = (await amostras.getSampleById(data.amostra)).nome+'-'+data.ensaio+'-'
+    const novoNome = await dados.gerarNomeArquivo(nomeBase)
+    const novoArquivo = {cod_arquivo: id, usuario: userId.id, data: Timestamp.now(), cod_amostra: data.amostra, tipo: data.tipo, ensaio: data.ensaio, nome_arquivo: novoNome}
+    arquivos.createArquivo(novoArquivo)
+    console.log(novoNome)
+    return novoNome
+  })
 })
 
 ipcMain.handle('gerar-nova-amostra', async (event, data) => {
@@ -137,3 +151,14 @@ function authenticate(){
   console.log("Adornou!")
 });
 }
+
+ipcMain.handle('get-all-arquivos', async (event) => {
+  const arquivos = new Arquivos();
+  try {
+    const allArquivos = await arquivos.getAllArquivos();
+    return allArquivos; // This will send the data back to the renderer process
+  } catch (error) {
+    console.error('Error fetching Arquivos:', error);
+    return []; // Return an empty array in case of error
+  }
+});

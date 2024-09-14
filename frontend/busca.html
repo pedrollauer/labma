@@ -85,9 +85,30 @@
     <img src="../assets/labma_logo.png">
     <h1>LabMA</h1>
     <div class="menu">
-        Busca
+        <h4>Busca</h4>
+        <h6>Filtros</h6>
+        <label>Amostra: </label><input type="text"></input><br>
+        <label>Usuário: </label><input type="text"></input><br>
+        <label>Ensaio: </label><input type="text"></input><br>
+        <label>Tipo: </label><input type="text"></input><br>
+        <table id="arquivos-table" border="1">
+            <thead>
+              <tr>
+                <th>Nome Arquivo</th> <!-- 'nome_arquivo' -->
+                <th>Código Arquivo</th> <!-- 'cod_arquivo' -->
+                <th>Usuário</th> <!-- 'usuario' -->
+                <th>Data</th> <!-- 'data' -->
+                <th>Código Amostra</th> <!-- 'cod_amostra' -->
+                <th>Tipo</th> <!-- 'tipo' -->
+                <th>Ensaio</th> <!-- 'ensaio' -->
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Rows will be inserted here dynamically -->
+            </tbody>
+          </table>
     </div>
-    <script src="main.js"></script>
+    <script src="./js/busca.js"></script>
 </body>
 </html>
 
